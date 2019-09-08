@@ -1,0 +1,6 @@
+# Checkout text files in UNIX format.
+
+*.java text=auto eol=lf
+*.json text=auto eol=lf
+*.xml text=auto eol=lf
+*.txt text=auto eol=lf
