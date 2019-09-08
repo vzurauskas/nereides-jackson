@@ -1,4 +1,4 @@
-package com.vzurauskas.jason.jackson;
+package com.vzurauskas.nereides.jackson;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import com.fasterxml.jackson.core.JsonProcessingException;

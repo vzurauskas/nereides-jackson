@@ -1,2 +1,2 @@
-# jason
+# Nereides
 Object oriented JSON library wrappers

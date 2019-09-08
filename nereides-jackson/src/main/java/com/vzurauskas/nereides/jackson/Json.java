@@ -1,4 +1,4 @@
-package com.vzurauskas.jason.jackson;
+package com.vzurauskas.nereides.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
