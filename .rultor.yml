@@ -1,0 +1,7 @@
+architect:
+  - vzurauskas
+readers:
+  - "urn:github:18754033"
+merge:
+  script: |
+    mvn clean install
