@@ -12,6 +12,6 @@ merge:
 release:
   script: |-
     [[ "${tag}" =~ ^[0-9]+(\.[0-9]+)*$ ]] || exit -1
-    mvn versions:set "-DnewVersion=${tag}"
+    mvn versions:set "-DnewVersion=${tag}" -DprocessAllModules
     git commit -am "${tag}"
     mvn clean deploy -Pnereides -Prelease --errors --settings /home/r/settings.xml
