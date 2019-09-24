@@ -8,7 +8,31 @@
     <artifactId>nereides-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Nereides</name>
+    <description>Object-oriented JSON wrappers for JSON libraries.</description>
+    <url>https://github.com/vzurauskas/nereides</url>
     <packaging>pom</packaging>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Vytautas Žurauskas</name>
+            <email>zurauskas.vytautas@gmail.com</email>
+            <organization>www.vzurauskas.com</organization>
+            <organizationUrl>https://www.vzurauskas.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/vzurauskas/nereides.git</connection>
+        <developerConnection>scm:git:ssh://github.com/vzurauskas/nereides.git</developerConnection>
+        <url>https://github.com/vzurauskas/nereides/tree/master</url>
+    </scm>
 
     <modules>
         <module>nereides-jackson</module>
