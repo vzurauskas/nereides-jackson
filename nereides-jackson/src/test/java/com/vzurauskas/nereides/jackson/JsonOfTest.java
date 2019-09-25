@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test;
 
 final class JsonOfTest {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Test
     void constructsFromBytes() throws JsonProcessingException {
-        byte[] bytes = mapper.writeValueAsBytes(
-            mapper.createObjectNode()
+        byte[] bytes = MAPPER.writeValueAsBytes(
+            MAPPER.createObjectNode()
                 .put("field1", "value1")
                 .put("field2", "value2")
         );

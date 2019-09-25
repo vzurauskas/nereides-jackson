@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+
+    <module name="FileLength">
+        <property name="max" value="500"/>
+    </module>
+
+    <module name="LineLength">
+        <property name="max" value="80"/>
+    </module>
+
+	<!-- Indentation unit is 4 spaces (tabs are not allowed anywhere.) -->
+    <module name="RegexpSingleline">
+       <property name="format" value="\t"/>
+       <property name="message" value="Line has tabs."/>
+    </module>
+	
+	<!-- Break line after a comma. -->
+    <module name="RegexpSingleline">
+       <property name="format" value="^\s*,"/>
+       <property name="message" value="Line has a leading comma."/>
+    </module>
+
+    <!-- Parameter wrapping. -->
+    <module name="RegexpSingleline">
+        <property name="format" value="^[^(]*\([^)]+$"/>
+        <property name="message" value="Opening parenthesis without closing one must be followed by a new line."/>
+    </module>
+
+    <!-- Parameter wrapping. If a parenthesis is opened, either it has to be
+        closed on the same line, or the line must end immediately.
+        WARNING - takes very long to process. -->
+<!--    <module name="RegexpSingleline">-->
+<!--        <property name="format" value="^^(\h*[^()\s\n]+\h*)+\).*$"/>-->
+<!--        <property name="message" value="Closing parenthesis without opening one must be on a new line."/>-->
+<!--    </module>-->
+
+    <!-- Checks whether files end with a new line. -->
+    <module name="NewlineAtEndOfFile"/>
+
+    <!-- Lines should not have trailing spaces. -->
+    <module name="RegexpSingleline">
+       <property name="format" value="\s+$"/>
+       <property name="message" value="Line has trailing spaces."/>
+    </module>
+
+    <module name="TreeWalker">
+
+		<!-- Checks correct indentation. Case clauses in switch statement are
+			 not indented. -->
+		<module name="Indentation">
+			<property name="basicOffset" value="4"/>
+			<property name="caseIndent" value="0"/>
+		</module>
+
+		<!-- Lines must break before an operator. -->
+        <module name="OperatorWrap"/>
+
+		<!-- Each variable must be declared on a separate line. -->
+		<module name="MultipleVariableDeclarations"/>
+
+		<!-- Local variable or a parameter must not shadow a field that is
+			 defined in the same class. Exceptions: constructor and setter 
+			 parameters. -->
+        <module name="HiddenField">
+			<property name="ignoreConstructorParameter" value="true"/>
+			<property name="ignoreSetter" value="true"/>
+		</module>
+
+		<!-- No space between a method name and the parenthesis. -->
+        <module name="MethodParamPad"/>
+		
+		<!-- Left curly brace must always be on the end of the line. -->
+        <module name="LeftCurly"/>
+		<!-- Right curly brace must start a line. -->
+        <module name="RightCurly"/>
+
+		<!-- Each line must contain at most one statement. -->
+        <module name="OneStatementPerLine"/>
+
+		<!-- Code blocks must have curly braces (if excluded.) -->
+<!--        <module name="NeedBraces">-->
+<!--			<property name="tokens" value="LITERAL_DO, LITERAL_ELSE, -->
+<!--				LITERAL_FOR, LITERAL_WHILE"/>-->
+<!--		</module>-->
+		<!-- All code blocks (including if) must have curly braces. If you are 
+			 going to use this configuration, comment out the one above. -->
+        <module name="NeedBraces"/>
+
+		<!-- Checks if unnecessary parentheses are used in a statement or
+			 expression. -->
+        <module name="UnnecessaryParentheses"/>
+
+		<!-- Switch statements must have "default" clause. -->
+        <module name="MissingSwitchDefault"/>
+		<!-- default case must be the last one. -->
+        <module name="DefaultComesLast"/>
+
+		<!-- Whitespace checks.
+			 Checks all tokens except RCURLY (right curly brace) because it 
+			 conflicts with ParenPad (no parenthesis padding) rule. 
+			 Empty method and constructor bodies with curly braces on the same 
+			 line don't require a space between them. -->
+        <module name="WhitespaceAround">
+		<property name="tokens" value="ASSIGN, BAND, BAND_ASSIGN, BOR, 
+			BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV, 
+			DIV_ASSIGN, EQUAL, GE, GT, LAND, LCURLY, LE, LITERAL_ASSERT, 
+			LITERAL_CATCH, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, 
+			LITERAL_FOR, LITERAL_IF, LITERAL_RETURN, LITERAL_SYNCHRONIZED, 
+			LITERAL_TRY, LITERAL_WHILE, LOR, LT, MINUS, MINUS_ASSIGN, MOD, 
+			MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION, SL, SLIST, 
+			SL_ASSIGN, SR, SR_ASSIGN, STAR, STAR_ASSIGN, TYPE_EXTENSION_AND"/>
+			<property name="allowEmptyConstructors" value="true"/>
+			<property name="allowEmptyMethods" value="true"/>
+		</module>
+		<!-- More whitespace checks. -->
+        <module name="WhitespaceAfter"/>
+
+		<!-- Naming conventions. -->
+        <module name="TypeName"/>
+        <module name="MethodName">
+<!--			<property name="format" value="^[a-z][a-zA-Z0-9]*$"/>-->
+		</module>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="ParameterName"/>
+        <module name="StaticVariableName"/>
+        <module name="ConstantName"/>
+
+		<!-- Checks visibility of class fields. -->
+		<!-- Allows private and public (for struct classes.) -->
+        <module name="VisibilityModifier">
+			<property name="protectedAllowed" value="false"/>
+			<property name="publicMemberPattern" value=""/>
+		</module>
+
+		<!-- Subexpressions must not contain assignments, such as in
+			 String s = Integer.toString(i = 2); -->
+        <module name="InnerAssignment"/>
+
+        <!-- Checks for Javadoc comments. -->
+
+		<!-- Methods must contain Javadoc. -->
+        <module name="JavadocMethod"/>
+		<!-- Types must contain Javadoc. -->
+        <module name="JavadocType"/>
+		<!-- Variables must contain Javadoc. -->
+<!--        <module name="JavadocVariable"/>-->
+		<!-- Checks Javadoc style. -->
+        <module name="JavadocStyle"/>
+
+		<!-- Additional naming conventions. -->
+
+		<module name="ClassTypeParameterName">
+			<property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+		</module>
+		<module name="MethodTypeParameterName">
+			<property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+		</module>
+        <module name="PackageName"/>
+
+        <!-- Checks for imports -->
+		
+		<!-- Avoid import statements that use the * notation. -->
+        <module name="AvoidStarImport"/>
+		<!-- Don't import sun.* packages. -->
+        <module name="IllegalImport"/>
+		<!-- Checks for redundant imports. -->
+        <module name="RedundantImport"/>
+		<!-- Checks for unused imports. -->
+        <module name="UnusedImports"/>		
+		<!-- Checks imports order. -->
+		<module name="ImportOrder">
+		<property name="option" value="top"/>
+		<property name="separated" value="false"/>
+	</module>
+
+		<!-- Method signatures must not exceed 7 parameters. -->
+        <module name="ParameterNumber"/>
+
+		<!-- Checks that the whitespace around the Generic tokens < and > is
+			 correct to the typical convention. -->
+        <module name="GenericWhitespace"/>
+		<!-- More whitespace checks. -->
+        <module name="NoWhitespaceAfter"/>
+		<!-- More whitespace checks. -->
+        <module name="NoWhitespaceBefore"/>
+		<!-- Parentheses must not be padded. -->
+        <module name="ParenPad"/>
+		<!-- Typecast parentheses must not be padded. -->
+        <module name="TypecastParenPad"/>
+
+		<!-- Checks the order of modifiers (public, abstract, final, etc.) -->
+        <module name="ModifierOrder"/>
+		<!-- Checks for redundant modifiers in interface and annotation 
+			 definitions. -->
+<!--        <module name="RedundantModifier"/>-->
+
+		<!-- Code blocks (except catch block) must contain at least one 
+			 statement. -->
+<!--        <module name="EmptyBlock">-->
+<!--			<property name="option" value="stmt"/>-->
+<!--			<property name="tokens" value="LITERAL_DO, LITERAL_ELSE,-->
+<!--				LITERAL_FINALLY, LITERAL_IF, LITERAL_FOR, LITERAL_TRY,-->
+<!--				LITERAL_WHILE, INSTANCE_INIT, STATIC_INIT"/>-->
+<!--		</module>-->
+		<!-- Catch blocks must contain at least one statement or comment. -->
+        <module name="EmptyBlock">
+			<property name="option" value="text"/>
+			<property name="tokens" value="LITERAL_CATCH"/>
+		</module>
+
+		<!-- There must be no empty statements (standalone ;'s). -->
+        <module name="EmptyStatement"/>
+		<!-- Classes that override equals() must also override hashCode(). -->
+        <module name="EqualsHashCode"/>
+		<!-- Classes that define a covariant equals() method must also 
+			 override method equals(java.lang.Object). -->
+        <module name="CovariantEquals"/>
+		<!-- Boolean must not be instantiated. -->
+        <module name="IllegalInstantiation">
+			<property name="classes" value="java.lang.Boolean"/>
+		</module>
+		<!-- Checks for overly complicated boolean expressions. -->
+        <module name="SimplifyBooleanExpression"/>
+		<!-- Use equals() to compare Strings. -->
+        <module name="StringLiteralEquality"/>
+		<!-- Catching java.lang.Exception, java.lang.Error or 
+			 java.lang.RuntimeException is almost never acceptable.  -->
+        <module name="IllegalCatch"/>
+		<!-- Declaring to throw java.lang.Error or java.lang.RuntimeException 
+			 is almost never acceptable. -->
+        <module name="IllegalThrows"/>
+        <module name="ClassDataAbstractionCoupling"/>
+		<!-- Checks if any class or object member is explicitly initialized to 
+			 default for its type value. -->
+        <module name="ExplicitInitialization"/>
+
+        <!-- Checks for class design -->
+		
+		<!-- Checks that classes are designed for extension. -->
+        <module name="DesignForExtension"/>
+		<!-- Classes which have only private constructors must be declared as 
+			 final. -->
+        <module name="FinalClass"/>
+		<!-- Interfaces that do not contain any methods but only constants are
+			 inappropriate - an interface should describe a type. -->
+        <module name="InterfaceIsType"/>
+
+        <!-- Miscellaneous other checks. -->
+
+		<!-- Arrays must be declared in Java style (not C style.) -->
+        <module name="ArrayTypeStyle"/>
+		<!-- long constants must be defined with an uppercase L. -->
+        <module name="UpperEll"/>
+		<!-- Make sure package declaration matches directory structure. -->
+		<module name="PackageDeclaration"/>
+
+    </module>
+
+</module>

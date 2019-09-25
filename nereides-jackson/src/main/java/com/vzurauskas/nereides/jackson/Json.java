@@ -12,7 +12,7 @@ public interface Json {
     byte[] bytes();
 
     public final class Of implements Json {
-        private static final ObjectMapper mapper = new ObjectMapper();
+        private static final ObjectMapper MAPPER = new ObjectMapper();
         private final Json origin;
 
         public Of(JsonNode node) {
@@ -20,7 +20,7 @@ public interface Json {
                 projection(
                     () -> {
                         try {
-                            return mapper.writeValueAsBytes(node);
+                            return MAPPER.writeValueAsBytes(node);
                         } catch (JsonProcessingException e) {
                             throw new UncheckedIOException(e);
                         }
@@ -44,7 +44,7 @@ public interface Json {
     }
 
     public final class Smart implements Json {
-        private static final ObjectMapper mapper = new ObjectMapper();
+        private static final ObjectMapper MAPPER = new ObjectMapper();
         private final Json origin;
 
         public Smart(Json origin) {
@@ -58,8 +58,8 @@ public interface Json {
 
         public String textual() {
             try {
-                return mapper.writeValueAsString(
-                    mapper.readValue(this.bytes(), ObjectNode.class)
+                return MAPPER.writeValueAsString(
+                    MAPPER.readValue(this.bytes(), ObjectNode.class)
                 );
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
