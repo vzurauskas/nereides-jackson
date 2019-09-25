@@ -6,7 +6,7 @@
 
     <groupId>com.vzurauskas.nereides</groupId>
     <artifactId>nereides-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.3</version>
     <name>Nereides</name>
     <description>Object-oriented JSON wrappers for JSON libraries.</description>
     <url>https://github.com/vzurauskas/nereides</url>
