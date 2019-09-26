@@ -7,7 +7,7 @@
     <groupId>com.vzurauskas.nereides</groupId>
     <artifactId>nereides-jackson</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Nereides Jackson</name>
+    <name>Nereides for Jackson</name>
     <description>An object-oriented JSON wrapper for Jackson JSON library.</description>
     <url>https://github.com/vzurauskas/nereides-jackson</url>
     <packaging>jar</packaging>
@@ -89,7 +89,7 @@
             <plugin>
                 <groupId>com.nikialeksey</groupId>
                 <artifactId>nullfree-maven-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>1.4.2</version>
             </plugin>
         </plugins>
     </build>
