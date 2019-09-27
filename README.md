@@ -1,4 +1,4 @@
-<img src="https://github.com/vzurauskas/nereides-jackson/blob/master/logo.png" height="100px" />
+<img src="https://github.com/vzurauskas/nereides-jackson/blob/master/logo.svg" height="100px" style="filter:FlipH" />
 
 
 [![EO principles respected here](http://www.elegantobjects.org/badge.svg)](http://www.elegantobjects.org)
