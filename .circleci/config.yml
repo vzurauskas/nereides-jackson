@@ -3,6 +3,8 @@
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
 version: 2
+  orbs:
+    codecov: codecov/codecov@1.0.5
 jobs:
   build:
     docker:
@@ -41,3 +43,6 @@ jobs:
       # https://github.com/vzurauskas/nereides-jackson/issues/29
       #- run: mvn integration-test nullfree:nullfree -Pwall --errors
       - run: mvn integration-test -Pwall --errors
+
+      - codecov/upload:
+          file: target/jacoco-aggregate.exec
