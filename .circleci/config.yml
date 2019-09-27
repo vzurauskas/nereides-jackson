@@ -38,4 +38,6 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
+      # https://github.com/vzurauskas/nereides-jackson/issues/29
+      #- run: mvn integration-test nullfree:nullfree -Pcheckstyle --errors
       - run: mvn integration-test nullfree:nullfree -Pcheckstyle --errors

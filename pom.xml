@@ -85,12 +85,12 @@
             </plugin>
 
             <!-- Badges -->
-
-            <plugin>
-                <groupId>com.nikialeksey</groupId>
-                <artifactId>nullfree-maven-plugin</artifactId>
-                <version>1.4.2</version>
-            </plugin>
+<!--        mvn clean deploy nullfree:nullfree -Pcheckstyle -Pnereides -Prelease &#45;&#45;errors &#45;&#45;settings /home/r/settings.xml-->
+<!--            <plugin>-->
+<!--                <groupId>com.nikialeksey</groupId>-->
+<!--                <artifactId>nullfree-maven-plugin</artifactId>-->
+<!--                <version>1.4.2</version>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 
