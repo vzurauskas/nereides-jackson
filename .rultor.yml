@@ -8,12 +8,12 @@ assets:
   secring.gpg: vzurauskas/secrets#secring.gpg
 merge:
   script: |
-    mvn clean install nullfree:nullfree -Pcheckstyle --errors
+    mvn clean install -Pwall --errors
 release:
   # https://github.com/vzurauskas/nereides-jackson/issues/29
-  # mvn clean deploy nullfree:nullfree -Pcheckstyle -Pnereides -Prelease --errors --settings /home/r/settings.xml
+  # mvn clean deploy nullfree:nullfree -Pwall -Pnereides -Prelease --errors --settings /home/r/settings.xml
   script: |-
     [[ "${tag}" =~ ^[0-9]+(\.[0-9]+)*$ ]] || exit -1
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mvn clean deploy -Pcheckstyle -Pnereides -Prelease --errors --settings /home/r/settings.xml
+    mvn clean deploy -Pwall -Pnereides -Prelease --errors --settings /home/r/settings.xml
