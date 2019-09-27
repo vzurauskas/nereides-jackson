@@ -1,4 +1,6 @@
-# Nereides for Jackson
+<img src="https://github.com/vzurauskas/nereides-jackson/blob/master/logo.png" height="100px" />
+
+
 [![EO principles respected here](http://www.elegantobjects.org/badge.svg)](http://www.elegantobjects.org)
 [![DevOps By Rultor.com](http://www.rultor.com/b/vzurauskas/nereides-jackson)](http://www.rultor.com/b/vzurauskas/nereides-jackson)
 
