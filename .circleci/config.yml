@@ -44,5 +44,6 @@ jobs:
       #- run: mvn integration-test nullfree:nullfree -Pwall --errors
       - run: mvn integration-test -Pwall --errors
 
-      - codecov/upload:
-          file: target/jacoco-aggregate.exec
+      - run:
+          name: Send to CodeCov
+          command: bash <(curl -s https://codecov.io/bash)
