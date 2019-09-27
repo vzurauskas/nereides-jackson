@@ -39,5 +39,5 @@ jobs:
 
       # run tests!
       # https://github.com/vzurauskas/nereides-jackson/issues/29
-      #- run: mvn integration-test nullfree:nullfree -wall --errors
-      - run: mvn integration-test -wall --errors
+      #- run: mvn integration-test nullfree:nullfree -Pwall --errors
+      - run: mvn integration-test -Pwall --errors
