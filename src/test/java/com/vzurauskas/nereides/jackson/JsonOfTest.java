@@ -4,6 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 
 final class JsonOfTest {
@@ -38,6 +43,17 @@ final class JsonOfTest {
         assertArrayEquals(
             string.getBytes(),
             new Json.Of(new ByteArrayInputStream(string.getBytes())).bytes()
+        );
+    }
+
+    @Test
+    void constructsFromFile() throws IOException, URISyntaxException {
+        Path path = Paths.get(
+            JsonOfTest.class.getClassLoader().getResource("deep.json").toURI()
+        );
+        assertArrayEquals(
+            Files.readAllBytes(path),
+            new Json.Of(path).bytes()
         );
     }
 }

@@ -50,6 +50,12 @@
 
     <module name="TreeWalker">
 
+        <module name="SuppressWithNearbyCommentFilter">
+            <property name="commentFormat" value="@checkstyle (\w+) \((\d+) lines\)"/>
+            <property name="checkFormat" value="$1"/>
+            <property name="influenceFormat" value="$2"/>
+        </module>
+
 		<!-- Checks correct indentation. Case clauses in switch statement are
 			 not indented. -->
 		<module name="Indentation">
