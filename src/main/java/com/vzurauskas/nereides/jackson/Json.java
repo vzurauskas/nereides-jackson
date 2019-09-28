@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.function.Supplier;
 
@@ -29,8 +31,36 @@ public interface Json {
             );
         }
 
+        public Of(String string) {
+            this(string::getBytes);
+        }
+
+        public Of(InputStream stream) {
+            this(() -> {
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                try {
+                    byte[] data = new byte[1024];
+                    while (true) {
+                        int size = stream.read(data, 0, data.length);
+                        if (size == -1) {
+                            break;
+                        }
+                        output.write(data, 0, size);
+                    }
+                    output.flush();
+                    return output.toByteArray();
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            });
+        }
+
         public Of(byte[] bytes) {
             this.origin = () -> bytes;
+        }
+
+        private Of(Json json) {
+            this.origin = json;
         }
 
         @Override
