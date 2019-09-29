@@ -2,23 +2,25 @@ package com.vzurauskas.nereides.jackson;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-final class JsonSmartTest {
+final class SmartJsonTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final Path deep;
 
-    JsonSmartTest() throws URISyntaxException {
+    SmartJsonTest() throws URISyntaxException {
         this.deep = Paths.get(
-            JsonSmartTest.class.getClassLoader()
+            SmartJsonTest.class.getClassLoader()
                 .getResource("deep.json").toURI()
         );
     }
@@ -29,7 +31,7 @@ final class JsonSmartTest {
             .getBytes();
         assertArrayEquals(
             bytes,
-            new Json.Smart(
+            new SmartJson(
                 new Json.Of(bytes)
             ).bytes()
         );
@@ -40,7 +42,7 @@ final class JsonSmartTest {
         assertEquals(
             "{\"field1\":\"value1\","
                 + "\"field2\":\"value2\"}",
-            new Json.Smart(
+            new SmartJson(
                 new Json.Of(
                     MAPPER.createObjectNode()
                         .put("field1", "value1")
@@ -57,7 +59,7 @@ final class JsonSmartTest {
                 + "  \"field1\" : \"value1\"," + System.lineSeparator()
                 + "  \"field2\" : \"value2\"" + System.lineSeparator()
                 + '}',
-            new Json.Smart(
+            new SmartJson(
                 new Json.Of(
                     MAPPER.createObjectNode()
                         .put("field1", "value1")
@@ -74,7 +76,7 @@ final class JsonSmartTest {
             .put("field2", "value2");
         assertEquals(
             node,
-            new Json.Smart(
+            new SmartJson(
                 new Json.Of(node)
             ).objectNode()
         );
@@ -84,7 +86,7 @@ final class JsonSmartTest {
     void findsLeaf() {
         assertEquals(
             "value2",
-            new Json.Smart(
+            new SmartJson(
                 new Json.Of(
                     MAPPER.createObjectNode()
                         .put("field1", "value1")
@@ -98,7 +100,7 @@ final class JsonSmartTest {
     void findsLeafAsInt() {
         assertEquals(
             14,
-            new Json.Smart(
+            new SmartJson(
                 new Json.Of(
                     MAPPER.createObjectNode()
                         .put("field1", "value1")
@@ -112,7 +114,7 @@ final class JsonSmartTest {
     void findsLeafAsDouble() {
         assertEquals(
             14.0,
-            new Json.Smart(
+            new SmartJson(
                 new Json.Of(
                     MAPPER.createObjectNode()
                         .put("field1", 14.0)
@@ -125,7 +127,7 @@ final class JsonSmartTest {
     @Test
     void findsLeafAsBool() {
         assertTrue(
-            new Json.Smart(
+            new SmartJson(
                 new Json.Of(
                     MAPPER.createObjectNode()
                         .put("field1", "value1")
@@ -139,9 +141,52 @@ final class JsonSmartTest {
     void findsPath() {
         assertEquals(
             "red",
-            new Json.Smart(
+            new SmartJson(
                 new Json.Of(deep)
             ).at("/ocean/rock1/nereid2").leaf("hair")
         );
+    }
+
+    @Test
+    void findsPathInArray() {
+        assertEquals(
+            "Jason",
+            new SmartJson(
+                new Json.Of(deep)
+            ).at("/ocean/rock1/nereid1/associates/0").leaf("name")
+        );
+    }
+
+    @Test
+    void understandsArrays() {
+        String array = "[{\"name\":\"Jason\"},{\"name\":\"Thetis\"}]";
+        assertArrayEquals(
+            array.getBytes(),
+            new SmartJson(
+                new Json.Of(deep)
+            ).at("/ocean/rock1/nereid1/associates").bytes()
+        );
+    }
+
+    @Disabled("https://github.com/vzurauskas/nereides-jackson/issues/39")
+    @Test
+    void reallyUnderstandsArrays() {
+        String array = "[{\"name\":\"Jason\"},{\"name\":\"Thetis\"}]";
+        assertEquals(
+            "Jason",
+            new SmartJson(
+                new Json.Of(deep)
+            ).at("/ocean/rock1/nereid1/associates").at("/0").leaf("name")
+        );
+    }
+
+    @Test
+    void knowsIfMissing() {
+        assertTrue(new SmartJson(new MissingJson()).isMissing());
+    }
+
+    @Test
+    void knowsIfNotMissing() {
+        assertFalse(new SmartJson(new Json.Of("{}")).isMissing());
     }
 }

@@ -56,4 +56,13 @@ final class JsonOfTest {
             new Json.Of(path).bytes()
         );
     }
+
+    @Test
+    void understandsArrays() {
+        String string = "[{\"name\":\"Jason\"},{\"name\":\"Thetis\"}]";
+        assertArrayEquals(
+            string.getBytes(),
+            new Json.Of(string).bytes()
+        );
+    }
 }

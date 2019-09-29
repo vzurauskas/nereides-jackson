@@ -3,7 +3,15 @@
     "rock1": {
       "nereid1": {
         "hair": "black",
-        "age": 100
+        "age": 100,
+        "associates": [
+          {
+            "name": "Jason"
+          },
+          {
+            "name": "Thetis"
+          }
+        ]
       },
       "nereid2": {
         "hair": "red",

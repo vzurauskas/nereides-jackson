@@ -3,7 +3,6 @@ package com.vzurauskas.nereides.jackson;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,14 +60,14 @@ public interface Json {
             this.origin = () -> bytes;
         }
 
-        private Of(Json json) {
-            this.origin = json;
-        }
-
         public Of(Path path) {
             this(
                 () -> new Unchecked<>(() -> Files.readAllBytes(path)).value()
             );
+        }
+
+        private Of(Json json) {
+            this.origin = json;
         }
 
         @Override
@@ -81,66 +80,4 @@ public interface Json {
         }
     }
 
-    public final class Smart implements Json {
-        private static final ObjectMapper MAPPER = new ObjectMapper();
-        private final Unchecked<ObjectNode> node;
-
-        public Smart(Json origin) {
-            this(
-                new Unchecked<>(
-                    () -> MAPPER.readValue(origin.bytes(), ObjectNode.class)
-                )
-            );
-        }
-
-        private Smart(Unchecked<ObjectNode> node) {
-            this.node = node;
-        }
-
-        @Override
-        public byte[] bytes() {
-            return new Unchecked<>(
-                () -> MAPPER.writeValueAsBytes(node.value())
-            ).value();
-        }
-
-        public String textual() {
-            return new Unchecked<>(
-                () -> MAPPER.writeValueAsString(node.value())
-            ).value();
-        }
-
-        public String pretty() {
-            return new Unchecked<>(
-                () -> MAPPER.writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(node.value())
-            ).value();
-        }
-
-        public String leaf(String key) {
-            return node.value().get(key).textValue();
-        }
-
-        public int leafAsInt(String key) {
-            return node.value().get(key).intValue();
-        }
-
-        public double leafAsDouble(String key) {
-            return node.value().get(key).doubleValue();
-        }
-
-        public boolean leafAsBool(String key) {
-            return node.value().get(key).booleanValue();
-        }
-
-        public ObjectNode objectNode() {
-            return node.value();
-        }
-
-        public Smart at(String path) {
-            return new Json.Smart(
-                new Json.Of(node.value().at(path))
-            );
-        }
-    }
 }
