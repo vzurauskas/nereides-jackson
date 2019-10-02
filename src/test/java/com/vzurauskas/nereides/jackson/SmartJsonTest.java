@@ -4,11 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -66,6 +71,27 @@ final class SmartJsonTest {
                         .put("field2", "value2")
                 )
             ).pretty()
+        );
+    }
+
+    @Test
+    void convertsToInputStream() throws JsonProcessingException {
+        final byte[] bytes = MAPPER.writeValueAsBytes(
+            MAPPER.createObjectNode()
+                .put("field1", "value1")
+                .put("field2", "value2")
+        );
+        assertEquals(
+            new BufferedReader(
+                new InputStreamReader(
+                    new ByteArrayInputStream(bytes)
+                )
+            ).lines().collect(Collectors.toList()),
+            new BufferedReader(
+                new InputStreamReader(
+                    new SmartJson(new Json.Of(bytes)).inputStream()
+                )
+            ).lines().collect(Collectors.toList())
         );
     }
 
@@ -144,6 +170,15 @@ final class SmartJsonTest {
             new SmartJson(
                 new Json.Of(deep)
             ).at("/ocean/rock1/nereid2").leaf("hair")
+        );
+    }
+
+    @Test
+    void handlesNonExistentPaths() {
+        assertTrue(
+            new SmartJson(
+                new Json.Of(deep)
+            ).at("/ocean/nothing").isMissing()
         );
     }
 
