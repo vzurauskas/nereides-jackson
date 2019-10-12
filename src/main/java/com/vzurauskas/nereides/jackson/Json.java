@@ -47,11 +47,20 @@ public interface Json {
          * 'jackson-databind' library.
          */
         public Of(JsonNode node) {
+            this(() -> node);
+        }
+
+        /**
+         * Constructor.
+         * @param node JSON represented by {@link JsonNode} from
+         * 'jackson-databind' library.
+         */
+        public Of(Supplier<JsonNode> node) {
             this(
                 projection(
                     () -> {
                         try {
-                            return MAPPER.writeValueAsBytes(node);
+                            return MAPPER.writeValueAsBytes(node.get());
                         } catch (JsonProcessingException e) {
                             throw new UncheckedIOException(e);
                         }
@@ -65,7 +74,7 @@ public interface Json {
          * @param string JSON represented by a {@link String}.
          */
         public Of(String string) {
-            this(string::getBytes);
+            this((Json) string::getBytes);
         }
 
         /**

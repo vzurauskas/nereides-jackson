@@ -118,7 +118,18 @@ final class SmartJsonTest {
                         .put("field1", "value1")
                         .put("field2", "value2")
                 )
-            ).leaf("field2")
+            ).leaf("field2").get()
+        );
+    }
+
+    @Test
+    void returnsEmptyOptionalForNonexistentLeaf() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                )
+            ).leaf("nonexistent").isPresent()
         );
     }
 
@@ -132,7 +143,18 @@ final class SmartJsonTest {
                         .put("field1", "value1")
                         .put("field2", 14)
                 )
-            ).leafAsInt("field2")
+            ).leafAsInt("field2").get().intValue()
+        );
+    }
+
+    @Test
+    void returnsEmptyOptionalForNonexistentIntLeaf() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                )
+            ).leafAsInt("nonexistent").isPresent()
         );
     }
 
@@ -146,7 +168,18 @@ final class SmartJsonTest {
                         .put("field1", 14.0)
                         .put("field2", "value2")
                 )
-            ).leafAsDouble("field1")
+            ).leafAsDouble("field1").get().doubleValue()
+        );
+    }
+
+    @Test
+    void returnsEmptyOptionalForNonexistentDoubleLeaf() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                )
+            ).leafAsDouble("nonexistent").isPresent()
         );
     }
 
@@ -159,7 +192,18 @@ final class SmartJsonTest {
                         .put("field1", "value1")
                         .put("field2", true)
                 )
-            ).leafAsBool("field2")
+            ).leafAsBool("field2").get()
+        );
+    }
+
+    @Test
+    void returnsEmptyOptionalForNonexistentBooleanLeaf() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                )
+            ).leafAsBool("nonexistent").isPresent()
         );
     }
 
@@ -169,7 +213,7 @@ final class SmartJsonTest {
             "red",
             new SmartJson(
                 new Json.Of(deep)
-            ).at("/ocean/rock1/nereid2").leaf("hair")
+            ).at("/ocean/rock1/nereid2").leaf("hair").get()
         );
     }
 
@@ -188,7 +232,7 @@ final class SmartJsonTest {
             "Jason",
             new SmartJson(
                 new Json.Of(deep)
-            ).at("/ocean/rock1/nereid1/associates/0").leaf("name")
+            ).at("/ocean/rock1/nereid1/associates/0").leaf("name").get()
         );
     }
 
@@ -211,7 +255,7 @@ final class SmartJsonTest {
             "Jason",
             new SmartJson(
                 new Json.Of(deep)
-            ).at("/ocean/rock1/nereid1/associates").at("/0").leaf("name")
+            ).at("/ocean/rock1/nereid1/associates").at("/0").leaf("name").get()
         );
     }
 

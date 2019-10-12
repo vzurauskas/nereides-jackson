@@ -1,10 +1,12 @@
 package com.vzurauskas.nereides.jackson;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * A smart JSON. It can represent itself in other data types such as,
@@ -89,37 +91,41 @@ public final class SmartJson implements Json {
     /**
      * Method to get a {@code String} type field of this JSON.
      * @param name Name of the field to return.
-     * @return Value of the field.
+     * @return Optional value of the field.
      */
-    public String leaf(String name) {
-        return jackson.value().get(name).textValue();
+    public Optional<String> leaf(String name) {
+        return Optional.ofNullable(jackson.value().get(name))
+            .map(JsonNode::textValue);
     }
 
     /**
      * Method to get an {@code int} type field of this JSON.
      * @param name Name of the field to return.
-     * @return Value of the field.
+     * @return Optional value of the field.
      */
-    public int leafAsInt(String name) {
-        return jackson.value().get(name).intValue();
+    public Optional<Integer> leafAsInt(String name) {
+        return Optional.ofNullable(jackson.value().get(name))
+            .map(JsonNode::intValue);
     }
 
     /**
      * Method to get a {@code double} type field of this JSON.
      * @param name Name of the field to return.
-     * @return Value of the field.
+     * @return Optional value of the field.
      */
-    public double leafAsDouble(String name) {
-        return jackson.value().get(name).doubleValue();
+    public Optional<Double> leafAsDouble(String name) {
+        return Optional.ofNullable(jackson.value().get(name))
+            .map(JsonNode::doubleValue);
     }
 
     /**
      * Method to get a {@code boolean} type field of this JSON.
      * @param name Name of the field to return.
-     * @return Value of the field.
+     * @return Optional value of the field.
      */
-    public boolean leafAsBool(String name) {
-        return jackson.value().get(name).booleanValue();
+    public Optional<Boolean> leafAsBool(String name) {
+        return Optional.ofNullable(jackson.value().get(name))
+            .map(JsonNode::booleanValue);
     }
 
     /**
@@ -151,7 +157,7 @@ public final class SmartJson implements Json {
         );
     }
 
-    /**\
+    /**
      * Method which tells if this JSON is missing.
       * @return true if this JSON is missing; otherwise false.
      */
