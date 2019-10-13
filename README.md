@@ -12,7 +12,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.vzurauskas.nereides/nereides-jackson)](https://search.maven.org/search?q=a:nereides-jackson)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/vzurauskas/nereides-jackson/blob/master/LICENSE)
 
-Nereides* for Jackson is an object oriented JSON library wrapper for [jackson-databind](https://github.com/FasterXML/jackson-databind). It allows developers to work with JSONs in a purely object oriented way: everything is instantiated via constructors, there are no static methods, no nulls, no "mappers" or "factories" and no configuration files. Most importantly, the core `Json` interface lends itself to easy custom implementations, making Nereides very extendable. 
+Nereides* for Jackson is an object oriented JSON library wrapper for [jackson-databind](https://github.com/FasterXML/jackson-databind). It allows developers to work with JSONs in a purely object oriented way: everything is instantiated via constructors, there are no static methods, no nulls, no "mappers" or "builders" and no configuration files. Most importantly, the core `Json` interface lends itself to easy custom implementations, making Nereides very extendable. 
 
 *(Nereides are the sea nymphs who guided Jason's ship safely through the Wandering Rocks in his quest for the Golden Fleece.)
 
@@ -32,7 +32,7 @@ Nereides* for Jackson is an object oriented JSON library wrapper for [jackson-da
 
 ## Simple usage
 ### Create new `Json` object
-```
+```java
 // From String:
 String jsonAsString = "{\"nymph\": \"nereid\"}";
 Json json = new Json.Of(jsonAsString);
@@ -48,7 +48,7 @@ json = new Json.Of(node);
 
 ### SmartJson
 Once we have the `Json` object, to use it in various ways, the [Smart Object pattern](https://www.yegor256.com/2016/04/26/why-inputstream-design-is-wrong.html) is employed.
-```
+```java
 // Convert it to String:
 String textual = new SmartJson(json).textual();
 
@@ -67,7 +67,7 @@ SmartJson nested = new SmartJson(json).at("/path/to/nested/json");
 
 ### MutableJson
 While the main purpose of this library is to enable making custom implementations of the `Json` interface (see more on that below), if you need to quickly assemble a `Json` by hand, `MutableJson` can be used. This API has a very declarative notation.
-```
+```java
 Json json = new MutableJson().with(
     "ocean",
     new MutableJson().with(
@@ -86,7 +86,7 @@ Json json = new MutableJson().with(
 System.out.println(new SmartJson(json).pretty());
 ```
 The code above would print this:
-```
+```json
 {
   "ocean" : {
     "nereid1" : {
@@ -100,4 +100,61 @@ The code above would print this:
     "stormy" : true
   }
 }
+```
+
+## Custom implementations
+If you have an object which needs to be able to display itself as JSON, sometimes it might be useful to just treat it as a JSON to begin with. In that case that object will have to implement a JSON interface. In most (all?) other libraries, JSON interfaces are huge, making it very difficult to implement them. To implement Nereides `Json`, all you need to do is provide the JSON representation in bytes.
+
+Let's say we have a bank account which we need to display in JSON. We need its IBAN, nickname and balance, which we get from another service. One way to implement it is this:
+```java
+public final class BankAccount implements Json {
+    private final String iban;
+    private final String nickname;
+    private final TransactionHistory transactions;
+
+    // Constructor...
+
+    public void makePayment(double amount) { /* Implementation... */ }
+    // Other public methods...
+
+    @Override
+    public byte[] bytes() {
+        return new MutableJson()
+            .with("iban", iban)
+            .with("nickname", nickname)
+            .with("balance", transactions.balance(iban))
+            .bytes();
+    }
+}
+```
+We can then make an HTTP response directly, e.g. with [Spring](https://spring.io/):
+```java         
+return new ResponseEntity<>(
+    new BankAccount(iban, nickname, transactions).bytes(),
+    HttpStatus.OK
+);
+```
+Or with [Takes](https://github.com/yegor256/takes):
+```java
+return new RsWithType(
+    new RsWithStatus(
+        new RsWithBody(
+            new BankAccount(iban, nickname, transactions).bytes()
+        ),
+        200
+    ),
+    "application/json"
+);
+```
+Or insert it in some JSON datastore:
+```java
+accounts.insert(new BankAccount(iban, nickname));
+```
+
+## Additional functionality
+If available functionality in the current version of Nereides is not enough, the developer can always fall back to jackson-databind. Convert `Json` to `ObjectNode`, do what you need with it, and construct a new `Json`.
+```java
+ObjectNode node = new SmartJson(json).objectNode();
+// Do stuff with node using Jackson's API.
+Json updated = new Json.Of(node);
 ```
