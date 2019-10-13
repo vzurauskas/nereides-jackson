@@ -7,7 +7,7 @@
 <!-- https://github.com/vzurauskas/nereides-jackson/issues/29 -->
 <!-- ![nullfree status](https://iwillfailyou.com/nullfree/vzurauskas/nereides-jackson) -->
 [![CircleCI](https://circleci.com/gh/vzurauskas/nereides-jackson/tree/master.svg?style=svg)](https://circleci.com/gh/vzurauskas/nereides-jackson/tree/master)
-[![Codecov branch](https://img.shields.io/codecov/c/github/vzurauskas/nereides-jackson/master)](https://codecov.io/gh/vzurauskas/nereides-jackson)
+[![Codecov](https://img.shields.io/codecov/c/github/vzurauskas/nereides-jackson/master)](https://codecov.io/gh/vzurauskas/nereides-jackson)
 [![Hits-of-Code](https://hitsofcode.com/github/vzurauskas/nereides-jackson)](https://hitsofcode.com/view/github/vzurauskas/nereides-jackson)
 [![Maven Central](https://img.shields.io/maven-central/v/com.vzurauskas.nereides/nereides-jackson)](https://search.maven.org/search?q=a:nereides-jackson)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/vzurauskas/nereides-jackson/blob/master/LICENSE)
@@ -16,7 +16,7 @@ Nereides* for Jackson is an object oriented JSON library wrapper for [jackson-da
 
 *(Nereides are the sea nymphs who guided Jason's ship safely through the Wandering Rocks in his quest for the Golden Fleece.)
 
-# Maven dependencies
+## Maven dependencies
 ```
 <dependency>
     <groupId>com.vzurauskas.nereides</groupId>
@@ -30,8 +30,8 @@ Nereides* for Jackson is an object oriented JSON library wrapper for [jackson-da
 </dependency>
 ```
 
-# Simple usage
-## Create new `Json` object
+## Simple usage
+### Create new `Json` object
 ```
 // From String:
 String jsonAsString = "{\"nymph\": \"nereid\"}";
@@ -46,7 +46,7 @@ JsonNode node = new ObjectMapper().readTree(jsonAsString);
 json = new Json.Of(node);
 ```
 
-## SmartJson
+### SmartJson
 Once we have the `Json` object, to use it in various ways, the [Smart Object pattern](https://www.yegor256.com/2016/04/26/why-inputstream-design-is-wrong.html) is employed.
 ```
 // Convert it to String:
@@ -63,4 +63,41 @@ Optional<String> leaf = new SmartJson(json).leaf("nymph");
 
 // Get a deeply nested Json:
 SmartJson nested = new SmartJson(json).at("/path/to/nested/json");
+```
+
+### MutableJson
+While the main purpose of this library is to enable making custom implementations of the `Json` interface (see more on that below), if you need to quickly assemble a `Json` by hand, `MutableJson` can be used. This API has a very declarative notation.
+```
+Json json = new MutableJson().with(
+    "ocean",
+    new MutableJson().with(
+        "nereid1",
+        new MutableJson()
+            .with("name", "Thetis")
+            .with("hair", "black")
+    ).with(
+        "nereid2",
+        new MutableJson()
+            .with("name", "Actaea")
+            .with("hair", "blonde")
+    )
+    .with("stormy", true)
+);
+System.out.println(new SmartJson(json).pretty());
+```
+The code above would print this:
+```
+{
+  "ocean" : {
+    "nereid1" : {
+      "name" : "Thetis",
+      "hair" : "black"
+    },
+    "nereid2" : {
+      "name" : "Actaea",
+      "hair" : "blonde"
+    },
+    "stormy" : true
+  }
+}
 ```
