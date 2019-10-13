@@ -105,7 +105,7 @@ The code above would print this:
 ## Custom implementations
 If you have an object which needs to be able to display itself as JSON, sometimes it might be useful to just treat it as a JSON to begin with. In that case that object will have to implement a JSON interface. In most (all?) other libraries, JSON interfaces are huge, making it very difficult to implement them. To implement Nereides `Json`, all you need to do is provide the JSON representation in bytes.
 
-Let's say we have a bank account which we need to display in JSON. We need its IBAN, nickname and balance, which we get from another service. One way to implement it is this:
+Let's say we have a bank account which we need to display as JSON. We need its IBAN, nickname and balance, which we get from another service. One way to implement it is this:
 ```java
 public final class BankAccount implements Json {
     private final String iban;
@@ -158,3 +158,15 @@ ObjectNode node = new SmartJson(json).objectNode();
 // Do stuff with node using Jackson's API.
 Json updated = new Json.Of(node);
 ```
+
+## Contributing
+To contribute:
+1. Fork this repository.
+2. Clone your fork.
+3. Create a branch from `master`.
+4. Make changes in your branch.
+5. Make sure the build passes with `mvn clean install -Pwall`. ("wall" is Maven profile with quality wall)
+6. Commit and push your changes to your fork.
+7. Make a pull request from your fork to this repository.
+
+You can read more about contributing in GitHub in [this article](https://github.com/firstcontributions/first-contributions).
