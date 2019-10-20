@@ -12,7 +12,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.vzurauskas.nereides/nereides-jackson)](https://search.maven.org/search?q=a:nereides-jackson)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/vzurauskas/nereides-jackson/blob/master/LICENSE)
 
-Nereides* for Jackson is an object oriented JSON library wrapper for [jackson-databind](https://github.com/FasterXML/jackson-databind). It allows developers to work with JSONs in a purely object oriented way: everything is instantiated via constructors, there are no static methods, no nulls, no "mappers" or "builders" and no configuration files. Most importantly, the core `Json` interface lends itself to easy custom implementations, making Nereides very extendable. 
+Nereid* for Jackson is an object oriented JSON library wrapper for [jackson-databind](https://github.com/FasterXML/jackson-databind) (Nereides for other libraries are planned). It allows developers to work with JSONs in a purely object oriented way: everything is instantiated via constructors, there are no static methods, no nulls and no "mappers" or "builders". Most importantly, the core `Json` interface lends itself to easy custom implementations, making Nereides very extendable. 
 
 *(Nereides are the sea nymphs who guided Jason's ship safely through the Wandering Rocks in his quest for the Golden Fleece.)
 
@@ -26,7 +26,7 @@ Nereides* for Jackson is an object oriented JSON library wrapper for [jackson-da
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
-    <version>2.9.9.2</version>
+    <version>2.9.10</version>
 </dependency>
 ```
 
@@ -103,9 +103,9 @@ The code above would print this:
 ```
 
 ## Custom implementations
-If you have an object which needs to be able to display itself as JSON, sometimes it might be useful to just treat it as a JSON to begin with. In that case that object will have to implement a JSON interface. In most (all?) other libraries, JSON interfaces are huge, making it very difficult to implement them. To implement Nereides `Json`, all you need to do is provide the JSON representation in bytes.
+If you have an object which needs to be able to display itself as JSON, sometimes it might be useful to just treat it as a JSON to begin with. In that case that object will have to implement a JSON interface. In most (all?) other libraries, JSON interfaces are huge, making it very difficult to implement them. With Nereides, all you need to do is provide the JSON representation in bytes.
 
-Let's say we have a bank account which we need to display as JSON. We need its IBAN, nickname and balance, which we get from another service. One way to implement it is this:
+Let's say we have a bank account which we need to display as JSON. We need its IBAN, nickname and balance, which (to make this a less trivial example) we get from another service. One way to implement it is this:
 ```java
 public final class BankAccount implements Json {
     private final String iban;
@@ -149,6 +149,14 @@ return new RsWithType(
 Or insert it in some JSON datastore:
 ```java
 accounts.insert(new BankAccount(iban, nickname));
+```
+
+Or compose it within a larger JSON:
+```java
+Json accounts = new MutableJson()
+    .with("name", "John")
+    .with("surname", "Smith")
+    .with("account", new BankAccount(iban, nickname));
 ```
 
 ## Additional functionality
