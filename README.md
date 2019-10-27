@@ -21,7 +21,7 @@ Nereid* for Jackson is an object oriented JSON library wrapper for [jackson-data
 <dependency>
     <groupId>com.vzurauskas.nereides</groupId>
     <artifactId>nereides-jackson</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
 </dependency>
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
@@ -55,8 +55,8 @@ String textual = new SmartJson(json).textual();
 // Convert it to pretty formatted String:
 String pretty = new SmartJson(json).pretty();
 
-// Convert it to InputStream:
-InputStream inputStream = new SmartJson(json).inputStream();
+// Convert it to byte array:
+byte[] bytes = new SmartJson(json).byteArray();
 
 // Get a String field value:
 Optional<String> leaf = new SmartJson(json).leaf("nymph");
@@ -103,7 +103,7 @@ The code above would print this:
 ```
 
 ## Custom implementations
-If you have an object which needs to be able to display itself as JSON, sometimes it might be useful to just treat it as a JSON to begin with. In that case that object will have to implement a JSON interface. In most (all?) other libraries, JSON interfaces are huge, making it very difficult to implement them. With Nereides, all you need to do is provide the JSON representation in bytes.
+If you have an object which needs to be able to display itself as JSON, sometimes it might be useful to just treat it as a JSON to begin with. In that case that object will have to implement a JSON interface. In most (all?) other libraries, JSON interfaces are huge, making it very difficult to implement them. With Nereides, all you need to do is provide the JSON representation in a stream of bytes. The easiest way to do this is to encapsulate another `Json` and delegate to it, or construct one on the spot.
 
 Let's say we have a bank account which we need to display as JSON. We need its IBAN, nickname and balance, which (to make this a less trivial example) we get from another service. One way to implement it is this:
 ```java
@@ -118,7 +118,7 @@ public final class BankAccount implements Json {
     // Other public methods...
 
     @Override
-    public byte[] bytes() {
+    public InputStream bytes() {
         return new MutableJson()
             .with("iban", iban)
             .with("nickname", nickname)
@@ -130,7 +130,9 @@ public final class BankAccount implements Json {
 We can then make an HTTP response directly, e.g. with [Spring](https://spring.io/):
 ```java         
 return new ResponseEntity<>(
-    new BankAccount(iban, nickname, transactions).bytes(),
+    new SmartJson(
+        new BankAccount(iban, nickname, transactions)
+    ).byteArray(),
     HttpStatus.OK
 );
 ```
