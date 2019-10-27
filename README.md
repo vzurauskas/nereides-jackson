@@ -16,17 +16,12 @@ Nereid* for Jackson is an object oriented JSON library wrapper for [jackson-data
 
 *(Nereides are the sea nymphs who guided Jason's ship safely through the Wandering Rocks in his quest for the Golden Fleece.)
 
-## Maven dependencies
+## Maven dependency
 ```
 <dependency>
     <groupId>com.vzurauskas.nereides</groupId>
     <artifactId>nereides-jackson</artifactId>
     <version>0.0.7</version>
-</dependency>
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>2.9.10</version>
 </dependency>
 ```
 
