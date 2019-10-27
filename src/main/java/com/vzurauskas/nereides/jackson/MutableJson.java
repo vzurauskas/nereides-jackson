@@ -2,6 +2,8 @@ package com.vzurauskas.nereides.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 /**
  * JSON which is mutable and can be used to build custom JSONs, e.g.
@@ -10,7 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * new MutableJson().with(
  *     "ocean",
  *     new MutableJson().with(
- *         "nereid1",
+ *         "nereid",
  *         new MutableJson()
  *             .with("hair", "black")
  *             .with("age", 100)
@@ -50,8 +52,10 @@ public final class MutableJson implements Json {
     }
 
     @Override
-    public byte[] bytes() {
-        return new Unchecked<>(() -> MAPPER.writeValueAsBytes(base)).value();
+    public InputStream bytes() {
+        return new ByteArrayInputStream(
+            new Unchecked<>(() -> MAPPER.writeValueAsBytes(base)).value()
+        );
     }
 
     /**

@@ -3,25 +3,24 @@ package com.vzurauskas.nereides.jackson;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Optional;
 
 /**
  * A smart JSON. It can represent itself in other data types such as,
- * byte arrays, {@link String}s, {@link InputStream}, and so forth. It can also
+ * byte arrays, {@link String}s, {@link InputStream}s, and so forth. It can also
  * give its nested JSONs and leaves, tell if it is missing and do other useful
  * things. To use it, you need to wrap another {@link Json} in it, e.g.
  * <pre>
  * {@code
- * Json original = ...;
+ * Json original = new Json.Of(...);
  * SmartJson smart = new SmartJson(original);
  * String textual = smart.textual();
  * InputStream stream = smart.inputStream();
  * SmartJson nested = smart.at("/path/to/nested/json");
  * if (!nested.isMissing()) {
- *     String value = nested.leaf("fieldName");
+ *     Optional<String> value = nested.leaf("fieldName");
  * }
  * }
  * </pre>
@@ -55,7 +54,7 @@ public final class SmartJson implements Json {
     }
 
     @Override
-    public byte[] bytes() {
+    public InputStream bytes() {
         return origin.bytes();
     }
 
@@ -81,11 +80,11 @@ public final class SmartJson implements Json {
     }
 
     /**
-     * Represent this JSON in {@link InputStream}.
-     * @return {@link InputStream} representing this JSON.
+     * Represent this JSON in an array of bytes.
+     * @return Byte array representing this JSON.
      */
-    public InputStream inputStream() {
-        return new ByteArrayInputStream(bytes());
+    public byte[] byteArray() {
+        return new ByteArray(bytes()).value();
     }
 
     /**
@@ -162,7 +161,7 @@ public final class SmartJson implements Json {
       * @return true if this JSON is missing; otherwise false.
      */
     public boolean isMissing() {
-        final byte[] bytes = bytes();
+        final byte[] bytes = byteArray();
         return bytes.length == 0 || Arrays.equals(bytes, NULL_BYTES);
     }
 }

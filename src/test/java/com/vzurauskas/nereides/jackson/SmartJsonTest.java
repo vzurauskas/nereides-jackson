@@ -7,13 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -31,14 +27,16 @@ final class SmartJsonTest {
     }
 
     @Test
-    void givesBytes() {
+    void givesByteStream() {
         byte[] bytes = "{\"field1\":\"value1\",\"field2\":\"value2\"}"
             .getBytes();
         assertArrayEquals(
             bytes,
-            new SmartJson(
-                new Json.Of(bytes)
-            ).bytes()
+            new ByteArray(
+                new SmartJson(
+                    new Json.Of(bytes)
+                )
+            ).value()
         );
     }
 
@@ -75,23 +73,15 @@ final class SmartJsonTest {
     }
 
     @Test
-    void convertsToInputStream() throws JsonProcessingException {
+    void convertsToByteArray() throws JsonProcessingException {
         final byte[] bytes = MAPPER.writeValueAsBytes(
             MAPPER.createObjectNode()
                 .put("field1", "value1")
                 .put("field2", "value2")
         );
-        assertEquals(
-            new BufferedReader(
-                new InputStreamReader(
-                    new ByteArrayInputStream(bytes)
-                )
-            ).lines().collect(Collectors.toList()),
-            new BufferedReader(
-                new InputStreamReader(
-                    new SmartJson(new Json.Of(bytes)).inputStream()
-                )
-            ).lines().collect(Collectors.toList())
+        assertArrayEquals(
+            bytes,
+            new SmartJson(new Json.Of(bytes)).byteArray()
         );
     }
 
@@ -241,9 +231,11 @@ final class SmartJsonTest {
         String array = "[{\"name\":\"Jason\"},{\"name\":\"Thetis\"}]";
         assertArrayEquals(
             array.getBytes(),
-            new SmartJson(
-                new Json.Of(deep)
-            ).at("/ocean/rock1/nereid1/associates").bytes()
+            new ByteArray(
+                new SmartJson(
+                    new Json.Of(deep)
+                ).at("/ocean/rock1/nereid1/associates")
+            ).value()
         );
     }
 

@@ -24,7 +24,7 @@ final class JsonOfTest {
         );
         assertArrayEquals(
             bytes,
-            new Json.Of(bytes).bytes()
+            new ByteArray(new Json.Of(bytes)).value()
         );
     }
 
@@ -33,16 +33,20 @@ final class JsonOfTest {
         String string = "{\"number\": 12}";
         assertArrayEquals(
             string.getBytes(),
-            new Json.Of(string).bytes()
+            new ByteArray(new Json.Of(string)).value()
         );
     }
 
     @Test
     void constructsFromInputStream() {
-        String string = "{\"number\": 12}";
+        final byte[] bytes = "{\"number\": 12}".getBytes();
         assertArrayEquals(
-            string.getBytes(),
-            new Json.Of(new ByteArrayInputStream(string.getBytes())).bytes()
+            bytes,
+            new ByteArray(
+                new Json.Of(
+                    new ByteArrayInputStream(bytes)
+                )
+            ).value()
         );
     }
 
@@ -53,7 +57,7 @@ final class JsonOfTest {
         );
         assertArrayEquals(
             Files.readAllBytes(path),
-            new Json.Of(path).bytes()
+            new ByteArray(new Json.Of(path)).value()
         );
     }
 
@@ -62,7 +66,7 @@ final class JsonOfTest {
         String string = "[{\"name\":\"Jason\"},{\"name\":\"Thetis\"}]";
         assertArrayEquals(
             string.getBytes(),
-            new Json.Of(string).bytes()
+            new ByteArray(new Json.Of(string)).value()
         );
     }
 }

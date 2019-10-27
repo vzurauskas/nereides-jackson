@@ -3,8 +3,7 @@ package com.vzurauskas.nereides.jackson;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -22,9 +21,9 @@ public interface Json {
 
     /**
      * Tell this {@code Json} to represent itself as bytes.
-     * @return Bytes representing this {@code Json}.
+     * @return {@link InputStream} with bytes representing this {@code Json}.
      */
-    byte[] bytes();
+    InputStream bytes();
 
     /**
      * {@link Json}, constructed from JSON represented by other data types
@@ -57,7 +56,7 @@ public interface Json {
          */
         public Of(Supplier<JsonNode> node) {
             this(
-                projection(
+                flattened(
                     () -> {
                         try {
                             return MAPPER.writeValueAsBytes(node.get());
@@ -69,44 +68,33 @@ public interface Json {
             );
         }
 
+        private static <T> T flattened(Supplier<T> scalar) {
+            return scalar.get();
+        }
+
         /**
          * Constructor.
          * @param string JSON represented by a {@link String}.
          */
         public Of(String string) {
-            this((Json) string::getBytes);
+            this(new ByteArrayInputStream(string.getBytes()));
         }
 
         /**
          * Constructor.
-         * @param stream JSON represented by an {@link InputStream}.
-         */
-        public Of(InputStream stream) {
-            this(() -> {
-                ByteArrayOutputStream output = new ByteArrayOutputStream();
-                try {
-                    byte[] data = new byte[1024];
-                    while (true) {
-                        int size = stream.read(data, 0, data.length);
-                        if (size == -1) {
-                            break;
-                        }
-                        output.write(data, 0, size);
-                    }
-                    output.flush();
-                    return output.toByteArray();
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
-                }
-            });
-        }
-
-        /**
-         * Constructor.
-         * @param bytes JSON represented by a byte array.
+         * @param bytes JSON represented by an array of bytes.
          */
         public Of(byte[] bytes) {
-            this.origin = () -> bytes;
+            this(new ByteArrayInputStream(bytes));
+        }
+
+        /**
+         * Constructor.
+         * @param stream JSON represented by the bytes in an
+         * {@link InputStream}.
+         */
+        public Of(InputStream stream) {
+            this.origin = () -> stream;
         }
 
         /**
@@ -115,7 +103,9 @@ public interface Json {
          */
         public Of(Path path) {
             this(
-                () -> new Unchecked<>(() -> Files.readAllBytes(path)).value()
+                () -> new Unchecked<>(
+                    () -> new ByteArrayInputStream(Files.readAllBytes(path))
+                ).value()
             );
         }
 
@@ -124,12 +114,8 @@ public interface Json {
         }
 
         @Override
-        public byte[] bytes() {
+        public InputStream bytes() {
             return origin.bytes();
-        }
-
-        private static <T> T projection(Supplier<T> scalar) {
-            return scalar.get();
         }
     }
 
