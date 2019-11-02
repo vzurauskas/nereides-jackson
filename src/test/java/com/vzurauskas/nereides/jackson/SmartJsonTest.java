@@ -124,6 +124,19 @@ final class SmartJsonTest {
     }
 
     @Test
+    void returnsEmptyOptionalIfLeafIsNotString() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .put("intField", 5)
+                )
+            ).leaf("intField").isPresent()
+        );
+    }
+
+    @Test
     void findsLeafAsInt() {
         assertEquals(
             14,
@@ -149,13 +162,41 @@ final class SmartJsonTest {
     }
 
     @Test
-    void findsLeafAsDouble() {
+    void returnsZeroIfLeafIsNotInt() {
         assertEquals(
-            14.0,
+            0,
             new SmartJson(
                 new Json.Of(
                     MAPPER.createObjectNode()
-                        .put("field1", 14.0)
+                        .put("stringField", "value1")
+                        .put("intField", 5)
+                )
+            ).leafAsInt("stringField").get().intValue()
+        );
+    }
+
+    @Test
+    void returnsIntEvenIfLeafIsDouble() {
+        assertEquals(
+            5,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("stringField", "value1")
+                        .put("doubleField", 5.9)
+                )
+            ).leafAsInt("doubleField").get().intValue()
+        );
+    }
+
+    @Test
+    void findsLeafAsDouble() {
+        assertEquals(
+            14.9,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", 14.9)
                         .put("field2", "value2")
                 )
             ).leafAsDouble("field1").get().doubleValue()
@@ -170,6 +211,34 @@ final class SmartJsonTest {
                     MAPPER.createObjectNode()
                 )
             ).leafAsDouble("nonexistent").isPresent()
+        );
+    }
+
+    @Test
+    void returnsZeroIfLeafIsNotDouble() {
+        assertEquals(
+            0.0,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("stringField", "value1")
+                        .put("doubleField", 5.9)
+                )
+            ).leafAsDouble("stringField").get().doubleValue()
+        );
+    }
+
+    @Test
+    void returnsDoubleEvenIfLeafIsInt() {
+        assertEquals(
+            5.0,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("stringField", "value1")
+                        .put("intField", 5)
+                )
+            ).leafAsDouble("intField").get().doubleValue()
         );
     }
 
@@ -194,6 +263,19 @@ final class SmartJsonTest {
                     MAPPER.createObjectNode()
                 )
             ).leafAsBool("nonexistent").isPresent()
+        );
+    }
+
+    @Test
+    void returnsFalseIfLeafIsNotBool() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("stringField", "value1")
+                        .put("boolField", true)
+                )
+            ).leafAsBool("stringField").get()
         );
     }
 

@@ -2,7 +2,6 @@ package com.vzurauskas.nereides.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 /**
@@ -53,9 +52,7 @@ public final class MutableJson implements Json {
 
     @Override
     public InputStream bytes() {
-        return new ByteArrayInputStream(
-            new Unchecked<>(() -> MAPPER.writeValueAsBytes(base)).value()
-        );
+        return new Json.Of(base).bytes();
     }
 
     /**
@@ -103,20 +100,14 @@ public final class MutableJson implements Json {
     }
 
     /**
-     * Add a {@link Json} field to this JSON. If the added {@link Json} is a
-     * {@link MutableJson}, other fields can be added to it, thus enabling
-     * nesting.
+     * Add a {@link Json} field to this JSON. If the added {@link Json} is a,
+     * other fields can be added to it, thus enabling nesting.
      * @param name Name of the field.
      * @param value Value of the field.
      * @return This JSON.
      */
     public MutableJson with(String name, Json value) {
-        base.set(
-            name,
-            new Unchecked<>(
-                () -> MAPPER.readTree(value.bytes())
-            ).value()
-        );
+        base.set(name, new SmartJson(value).objectNode());
         return this;
     }
 }

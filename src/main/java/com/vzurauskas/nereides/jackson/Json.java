@@ -77,7 +77,7 @@ public interface Json {
          * @param string JSON represented by a {@link String}.
          */
         public Of(String string) {
-            this(new ByteArrayInputStream(string.getBytes()));
+            this(string.getBytes());
         }
 
         /**
@@ -118,5 +118,4 @@ public interface Json {
             return origin.bytes();
         }
     }
-
 }

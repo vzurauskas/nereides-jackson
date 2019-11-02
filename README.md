@@ -12,16 +12,20 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.vzurauskas.nereides/nereides-jackson)](https://search.maven.org/search?q=a:nereides-jackson)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/vzurauskas/nereides-jackson/blob/master/LICENSE)
 
-Nereid* for Jackson is an object oriented JSON library wrapper for [jackson-databind](https://github.com/FasterXML/jackson-databind) (Nereides for other libraries are planned). It allows developers to work with JSONs in a purely object oriented way: everything is instantiated via constructors, there are no static methods, no nulls and no "mappers" or "builders". Most importantly, the core `Json` interface lends itself to easy custom implementations, making Nereides very extendable. 
+Nereid* for Jackson is an object oriented JSON library wrapper for [jackson-databind](https://github.com/FasterXML/jackson-databind) It allows developers to work with JSON objects in a purely object oriented way: everything is instantiated via constructors, there are no static methods, no nulls and no "mappers" or "builders". Most importantly, the core `Json` interface lends itself to easy custom implementations, making Nereides very extensible. 
 
 *(Nereides are the sea nymphs who guided Jason's ship safely through the Wandering Rocks in his quest for the Golden Fleece.)
+
+Available Nereides:  
+-- [Nereid for Jackson](https://github.com/vzurauskas/nereides-jackson) (recommended)  
+-- [Nereid for javax.json](https://github.com/vzurauskas/nereides-javax)
 
 ## Maven dependency
 ```
 <dependency>
     <groupId>com.vzurauskas.nereides</groupId>
     <artifactId>nereides-jackson</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
 </dependency>
 ```
 
@@ -131,7 +135,7 @@ return new ResponseEntity<>(
     HttpStatus.OK
 );
 ```
-Or with [Takes](https://github.com/yegor256/takes):
+...or with [Takes](https://github.com/yegor256/takes):
 ```java
 return new RsWithType(
     new RsWithStatus(
@@ -143,12 +147,12 @@ return new RsWithType(
     "application/json"
 );
 ```
-Or insert it in some JSON datastore:
+...or insert it in some JSON datastore:
 ```java
 accounts.insert(new BankAccount(iban, nickname));
 ```
 
-Or compose it within a larger JSON:
+...or compose it within a larger JSON:
 ```java
 Json accounts = new MutableJson()
     .with("name", "John")

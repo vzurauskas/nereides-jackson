@@ -2,6 +2,7 @@ package com.vzurauskas.nereides.jackson;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -47,6 +48,17 @@ final class JsonOfTest {
                     new ByteArrayInputStream(bytes)
                 )
             ).value()
+        );
+    }
+
+    @Test
+    void constructsFromJsonNode() throws JsonProcessingException {
+        JsonNode node = MAPPER.createObjectNode()
+            .put("field1", "value1")
+            .put("field2", "value2");
+        assertArrayEquals(
+            MAPPER.writeValueAsBytes(node),
+            new ByteArray(new Json.Of(node)).value()
         );
     }
 
