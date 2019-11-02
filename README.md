@@ -12,7 +12,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.vzurauskas.nereides/nereides-jackson)](https://search.maven.org/search?q=a:nereides-jackson)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/vzurauskas/nereides-jackson/blob/master/LICENSE)
 
-Nereid* for Jackson is an object oriented JSON library wrapper for [jackson-databind](https://github.com/FasterXML/jackson-databind) It allows developers to work with JSON objects in a purely object oriented way: everything is instantiated via constructors, there are no static methods, no nulls and no "mappers" or "builders". Most importantly, the core `Json` interface lends itself to easy custom implementations, making Nereides very extensible. 
+Nereid* for Jackson is an object oriented JSON library wrapper for [jackson-databind](https://github.com/FasterXML/jackson-databind) It allows developers to work with JSON documents in a purely object oriented way: everything is instantiated via constructors, there are no static methods, no nulls and no "mappers" or "builders". Most importantly, the core `Json` interface lends itself to easy custom implementations, making Nereides very extensible. 
 
 *(Nereides are the sea nymphs who guided Jason's ship safely through the Wandering Rocks in his quest for the Golden Fleece.)
 
@@ -161,7 +161,7 @@ Json accounts = new MutableJson()
 ```
 
 ## Additional functionality
-If available functionality in the current version of Nereides is not enough, the developer can always fall back to jackson-databind. Convert `Json` to `ObjectNode`, do what you need with it, and construct a new `Json`.
+If available functionality in the current version of Nereid is not enough, the developer can always fall back to jackson-databind. Convert `Json` to `ObjectNode`, do what you need with it, and construct a new `Json`.
 ```java
 ObjectNode node = new SmartJson(json).objectNode();
 // Do stuff with node using Jackson's API.
