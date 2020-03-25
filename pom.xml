@@ -6,7 +6,7 @@
 
     <groupId>com.vzurauskas.nereides</groupId>
     <artifactId>nereides-jackson</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.2</version>
     <name>Nereides for Jackson</name>
     <description>An object-oriented JSON wrapper for Jackson JSON library.</description>
     <url>https://github.com/vzurauskas/nereides-jackson</url>
