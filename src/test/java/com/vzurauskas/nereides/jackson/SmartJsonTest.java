@@ -99,193 +99,12 @@ final class SmartJsonTest {
     }
 
     @Test
-    void findsLeaf() {
-        assertEquals(
-            "value2",
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                        .put("field1", "value1")
-                        .put("field2", "value2")
-                )
-            ).leaf("field2").get()
-        );
-    }
-
-    @Test
-    void returnsEmptyOptionalForNonexistentLeaf() {
-        assertFalse(
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                )
-            ).leaf("nonexistent").isPresent()
-        );
-    }
-
-    @Test
-    void returnsEmptyOptionalIfLeafIsNotString() {
-        assertFalse(
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                        .put("field1", "value1")
-                        .put("intField", 5)
-                )
-            ).leaf("intField").isPresent()
-        );
-    }
-
-    @Test
-    void findsLeafAsInt() {
-        assertEquals(
-            14,
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                        .put("field1", "value1")
-                        .put("field2", 14)
-                )
-            ).leafAsInt("field2").get().intValue()
-        );
-    }
-
-    @Test
-    void returnsEmptyOptionalForNonexistentIntLeaf() {
-        assertFalse(
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                )
-            ).leafAsInt("nonexistent").isPresent()
-        );
-    }
-
-    @Test
-    void returnsZeroIfLeafIsNotInt() {
-        assertEquals(
-            0,
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                        .put("stringField", "value1")
-                        .put("intField", 5)
-                )
-            ).leafAsInt("stringField").get().intValue()
-        );
-    }
-
-    @Test
-    void returnsIntEvenIfLeafIsDouble() {
-        assertEquals(
-            5,
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                        .put("stringField", "value1")
-                        .put("doubleField", 5.9)
-                )
-            ).leafAsInt("doubleField").get().intValue()
-        );
-    }
-
-    @Test
-    void findsLeafAsDouble() {
-        assertEquals(
-            14.9,
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                        .put("field1", 14.9)
-                        .put("field2", "value2")
-                )
-            ).leafAsDouble("field1").get().doubleValue()
-        );
-    }
-
-    @Test
-    void returnsEmptyOptionalForNonexistentDoubleLeaf() {
-        assertFalse(
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                )
-            ).leafAsDouble("nonexistent").isPresent()
-        );
-    }
-
-    @Test
-    void returnsZeroIfLeafIsNotDouble() {
-        assertEquals(
-            0.0,
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                        .put("stringField", "value1")
-                        .put("doubleField", 5.9)
-                )
-            ).leafAsDouble("stringField").get().doubleValue()
-        );
-    }
-
-    @Test
-    void returnsDoubleEvenIfLeafIsInt() {
-        assertEquals(
-            5.0,
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                        .put("stringField", "value1")
-                        .put("intField", 5)
-                )
-            ).leafAsDouble("intField").get().doubleValue()
-        );
-    }
-
-    @Test
-    void findsLeafAsBool() {
-        assertTrue(
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                        .put("field1", "value1")
-                        .put("field2", true)
-                )
-            ).leafAsBool("field2").get()
-        );
-    }
-
-    @Test
-    void returnsEmptyOptionalForNonexistentBooleanLeaf() {
-        assertFalse(
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                )
-            ).leafAsBool("nonexistent").isPresent()
-        );
-    }
-
-    @Test
-    void returnsFalseIfLeafIsNotBool() {
-        assertFalse(
-            new SmartJson(
-                new Json.Of(
-                    MAPPER.createObjectNode()
-                        .put("stringField", "value1")
-                        .put("boolField", true)
-                )
-            ).leafAsBool("stringField").get()
-        );
-    }
-
-    @Test
     void findsPath() {
         assertEquals(
             "red",
             new SmartJson(
                 new Json.Of(deep)
-            ).at("/ocean/rock1/nereid2").leaf("hair").get()
+            ).at("/ocean/rock1/nereid2").leaf("hair")
         );
     }
 
@@ -304,7 +123,7 @@ final class SmartJsonTest {
             "Jason",
             new SmartJson(
                 new Json.Of(deep)
-            ).at("/ocean/rock1/nereid1/associates/0").leaf("name").get()
+            ).at("/ocean/rock1/nereid1/associates/0").leaf("name")
         );
     }
 
@@ -329,7 +148,7 @@ final class SmartJsonTest {
             "Jason",
             new SmartJson(
                 new Json.Of(deep)
-            ).at("/ocean/rock1/nereid1/associates").at("/0").leaf("name").get()
+            ).at("/ocean/rock1/nereid1/associates").at("/0").leaf("name")
         );
     }
 
