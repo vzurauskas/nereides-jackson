@@ -161,4 +161,12 @@ final class SmartJsonTest {
     void knowsIfNotMissing() {
         assertFalse(new SmartJson(new Json.Of("{}")).isMissing());
     }
+
+    @Test
+    void toStringWorksOfMalformed() {
+        assertEquals(
+            "malformed",
+            new SmartJson(new Json.Of("malformed")).toString()
+        );
+    }
 }

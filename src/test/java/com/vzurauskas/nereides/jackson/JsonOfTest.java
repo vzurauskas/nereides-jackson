@@ -1,6 +1,7 @@
 package com.vzurauskas.nereides.jackson;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -79,6 +80,14 @@ final class JsonOfTest {
         assertArrayEquals(
             string.getBytes(),
             new ByteArray(new Json.Of(string)).value()
+        );
+    }
+
+    @Test
+    void toStringWorksEvenIfMalformed() {
+        assertEquals(
+            "malformed",
+            new Json.Of("malformed").toString()
         );
     }
 }

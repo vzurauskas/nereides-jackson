@@ -53,11 +53,6 @@ public final class SmartJson implements Json {
         this.jackson = jackson;
     }
 
-    @Override
-    public InputStream bytes() {
-        return origin.bytes();
-    }
-
     /**
      * Represent this JSON in textual form.
      * @return String representing this JSON in textual form.
@@ -219,5 +214,15 @@ public final class SmartJson implements Json {
     public boolean isMissing() {
         final byte[] bytes = byteArray();
         return bytes.length == 0 || Arrays.equals(bytes, NULL_BYTES);
+    }
+
+    @Override
+    public InputStream bytes() {
+        return origin.bytes();
+    }
+
+    @Override
+    public String toString() {
+        return new String(new ByteArray(this).value());
     }
 }

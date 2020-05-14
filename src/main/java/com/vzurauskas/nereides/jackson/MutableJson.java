@@ -50,11 +50,6 @@ public final class MutableJson implements Json {
         this.base = base;
     }
 
-    @Override
-    public InputStream bytes() {
-        return new Json.Of(base).bytes();
-    }
-
     /**
      * Add a {@code String} field to this JSON.
      * @param name Name of the field.
@@ -109,5 +104,15 @@ public final class MutableJson implements Json {
     public MutableJson with(String name, Json value) {
         base.set(name, new SmartJson(value).objectNode());
         return this;
+    }
+
+    @Override
+    public InputStream bytes() {
+        return new Json.Of(base).bytes();
+    }
+
+    @Override
+    public String toString() {
+        return new String(new ByteArray(this).value());
     }
 }
