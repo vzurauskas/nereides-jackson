@@ -163,7 +163,7 @@ final class SmartJsonTest {
     }
 
     @Test
-    void toStringWorksOfMalformed() {
+    void toStringWorksWhenMalformed() {
         assertEquals(
             "malformed",
             new SmartJson(new Json.Of("malformed")).toString()
