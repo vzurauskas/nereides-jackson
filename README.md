@@ -126,6 +126,21 @@ public final class BankAccount implements Json {
     }
 }
 ```
+Even simpler way is to extend the `JsonEnvelope`, then you don't even need to implement `bytes()`:
+```java
+public final class BankAccount extends JsonEnvelope {
+    public BankAccount(String iban, String nickname, TransactionHistory transactions) {
+        super(new MutableJson()
+            .with("iban", iban)
+            .with("nickname", nickname)
+            .with("balance", transactions.balance(iban))
+        );
+    }
+
+    public void makePayment(double amount) { /* Implementation... */ }
+    // Other public methods...
+}
+```
 We can then make an HTTP response directly, e.g. with [Spring](https://spring.io/):
 ```java         
 return new ResponseEntity<>(
