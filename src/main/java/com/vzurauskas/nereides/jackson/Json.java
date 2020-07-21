@@ -85,7 +85,11 @@ public interface Json {
          * @param bytes JSON represented by an array of bytes.
          */
         public Of(byte[] bytes) {
-            this(new ByteArrayInputStream(bytes));
+            this(
+                new AutoResetInputStream(
+                    new ByteArrayInputStream(bytes)
+                )
+            );
         }
 
         /**
