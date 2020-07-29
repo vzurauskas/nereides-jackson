@@ -20,6 +20,7 @@ final class ByteArray {
             while (true) {
                 int size = stream.read(data, 0, data.length);
                 if (size == -1) {
+                    stream.close();
                     break;
                 }
                 output.write(data, 0, size);

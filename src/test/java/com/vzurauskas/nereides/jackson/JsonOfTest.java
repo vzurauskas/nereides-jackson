@@ -6,7 +6,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -89,5 +91,26 @@ final class JsonOfTest {
             "malformed",
             new Json.Of("malformed").toString()
         );
+    }
+
+    @Test
+    void canReadTwice() {
+        String string = "{\"number\": 12}";
+        Json json = new Json.Of(string);
+        assertArrayEquals(string.getBytes(), new ByteArray(json).value());
+        assertArrayEquals(string.getBytes(), new ByteArray(json).value());
+    }
+
+    @Test
+    void doesntReadFileEachTimeJsonIsAccessed() throws IOException {
+        String string = "{\"number\": 12}";
+        File file = File.createTempFile("whatever", "whatever");
+        try (PrintStream ps = new PrintStream(file)) {
+            ps.print(string);
+        }
+        Json json = new Json.Of(file.toPath());
+        assertArrayEquals(string.getBytes(), new ByteArray(json).value());
+        file.delete();
+        assertArrayEquals(string.getBytes(), new ByteArray(json).value());
     }
 }
