@@ -175,7 +175,7 @@ final class SmartJsonTest {
         SmartJson json = new SmartJson(
             new Json.Of("{\"field1\":\"value1\",\"field2\":\"value2\"}")
         );
-        json.leaf("field1");
-        json.leaf("field1");
+        assertEquals("value1", json.leaf("field1"));
+        assertEquals("value1", json.leaf("field1"));
     }
 }
