@@ -3,11 +3,11 @@ package com.vzurauskas.nereides.jackson;
 import java.io.IOException;
 import java.io.InputStream;
 
-public final class AutoResetInputStream extends InputStream {
+final class AutoResetInputStream extends InputStream {
 
     private final InputStream origin;
 
-    public AutoResetInputStream(InputStream origin) {
+    AutoResetInputStream(InputStream origin) {
         super();
         origin.mark(1 << 24);
         this.origin = origin;

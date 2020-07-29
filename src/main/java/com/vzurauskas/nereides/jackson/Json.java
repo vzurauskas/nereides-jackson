@@ -107,10 +107,18 @@ public interface Json {
          */
         public Of(Path path) {
             this(
-                () -> new Unchecked<>(
-                    () -> new ByteArrayInputStream(Files.readAllBytes(path))
-                ).value()
+                new Cached<>(
+                    () -> new Unchecked<>(
+                        () -> new AutoResetInputStream(
+                            new ByteArrayInputStream(Files.readAllBytes(path))
+                        )
+                    ).value()
+                )
             );
+        }
+
+        private Of(Cached<InputStream> cached) {
+            this(cached::value);
         }
 
         private Of(Json json) {
