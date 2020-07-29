@@ -9,16 +9,13 @@ public final class AutoResetInputStream extends InputStream {
 
     public AutoResetInputStream(InputStream origin) {
         super();
-        if (!origin.markSupported()) {
-            throw new IllegalArgumentException("Marking not supported.");
-        }
-
         origin.mark(1 << 24);
         this.origin = origin;
     }
 
     @Override
     public void close() throws IOException {
+        super.close();
         origin.reset();
     }
 
