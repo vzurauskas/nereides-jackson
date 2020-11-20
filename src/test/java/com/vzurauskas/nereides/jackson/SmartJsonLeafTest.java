@@ -4,14 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.junit.jupiter.api.Test;
 
 final class SmartJsonLeafTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    // String
+    // String, immediate
 
     @Test
     void findsOptLeaf() {
@@ -95,7 +98,107 @@ final class SmartJsonLeafTest {
         );
     }
 
-    // Int
+    // String, path
+
+    @Test
+    void findsOptLeafInPath() {
+        assertEquals(
+            "innerValue",
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", "innerValue")
+                        )
+                )
+            ).optLeaf("/field2/innerField").get()
+        );
+    }
+
+    @Test
+    void findsLeafInPath() {
+        assertEquals(
+            "innerValue",
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", "innerValue")
+                        )
+                )
+            ).leaf("/field2/innerField")
+        );
+    }
+
+    @Test
+    void returnsEmptyOptionalForNonexistentLeafInPath() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                )
+            ).optLeaf("/nonexistent/path").isPresent()
+        );
+    }
+
+    @Test
+    void throwsForNonexistentLeafInPath() {
+        assertTrue(
+            assertThrows(
+                IllegalArgumentException.class,
+                () -> new SmartJson(
+                    new Json.Of(
+                        MAPPER.createObjectNode()
+                    )
+                ).leaf("/nonexistent/path")
+            ).getMessage().contains("No such field")
+        );
+    }
+
+    @Test
+    void returnsEmptyOptionalIfLeafInPathIsNotString() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", 7)
+                        )
+                )
+            ).optLeaf("/field2/innerField").isPresent()
+        );
+    }
+
+    @Test
+    void throwsIfLeafInPathIsNotString() {
+        assertTrue(
+            assertThrows(
+                IllegalArgumentException.class,
+                () -> new SmartJson(
+                    new Json.Of(
+                        MAPPER.createObjectNode()
+                            .put("field1", "value1")
+                            .<ObjectNode>set(
+                                "field2",
+                                MAPPER.createObjectNode()
+                                    .put("innerField", true)
+                            )
+                    )
+                ).leaf("/field2/innerField")
+            ).getMessage().contains("No such field")
+        );
+    }
+
+    // Int, immediate, normal
 
     @Test
     void findsOptLeafAsInt() {
@@ -150,6 +253,8 @@ final class SmartJsonLeafTest {
         );
     }
 
+    // Int, immediate, autoconversions
+
     @Test
     void returnsZeroIfOptLeafIsNotInt() {
         assertEquals(
@@ -178,8 +283,6 @@ final class SmartJsonLeafTest {
         );
     }
 
-    // Double
-
     @Test
     void returnsIntEvenIfOptLeafIsDouble() {
         assertEquals(
@@ -207,6 +310,127 @@ final class SmartJsonLeafTest {
             ).leafAsInt("doubleField")
         );
     }
+
+    // Int, path, normal
+
+    @Test
+    void findsOptIntLeafInPath() {
+        assertEquals(
+            999,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", 999)
+                        )
+                )
+            ).optLeafAsInt("/field2/innerField").get().intValue()
+        );
+    }
+
+    @Test
+    void findsLeafIntInPath() {
+        assertEquals(
+            12,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", 12)
+                        )
+                )
+            ).leafAsInt("/field2/innerField")
+        );
+    }
+
+    @Test
+    void returnsEmptyOptionalForNonexistentLeafIntInPath() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                )
+            ).optLeafAsInt("/nonexistent/path").isPresent()
+        );
+    }
+
+    @Test
+    void throwsForNonexistentLeafIntInPath() {
+        assertTrue(
+            assertThrows(
+                IllegalArgumentException.class,
+                () -> new SmartJson(
+                    new Json.Of(
+                        MAPPER.createObjectNode()
+                    )
+                ).leafAsInt("/nonexistent/path")
+            ).getMessage().contains("No such field")
+        );
+    }
+
+    // Int, path, autoconversions
+
+    @Test
+    void returnsZeroIfOptLeafInPathIsNotInt() {
+        assertEquals(
+            0,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", true)
+                        )
+                )
+            ).optLeafAsInt("/field2/innerField").get().intValue()
+        );
+    }
+
+    @Test
+    void returnsZeroIfLeafInPathIsNotInt() {
+        assertEquals(
+            0,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", true)
+                        )
+                )
+            ).leafAsInt("/field2/innerField")
+        );
+    }
+
+    @Test
+    void returnsIntEvenIfOptLeafInPathIsDouble() {
+        assertEquals(
+            5,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", 5.9)
+                        )
+                )
+            ).optLeafAsInt("/field2/innerField").get().intValue()
+        );
+    }
+
+    // Double, immediate, normal
 
     @Test
     void findsOptLeafAsDouble() {
@@ -260,6 +484,8 @@ final class SmartJsonLeafTest {
             ).getMessage().contains("No such field")
         );
     }
+
+    // Double, immediate, autoconversions
 
     @Test
     void returnsZeroIfOptLeafIsNotDouble() {
@@ -317,7 +543,126 @@ final class SmartJsonLeafTest {
         );
     }
 
-    // Boolean
+    // Double, path, normal
+
+    @Test
+    void findsOptDoubleLeafInPath() {
+        assertEquals(
+            999.17,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", 999.17)
+                        )
+                )
+            ).optLeafAsDouble("/field2/innerField").get().doubleValue()
+        );
+    }
+
+    @Test
+    void findsLeafDoubleInPath() {
+        assertEquals(
+            12.45,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", 12.45)
+                        )
+                )
+            ).leafAsDouble("/field2/innerField")
+        );
+    }
+
+    @Test
+    void returnsEmptyOptionalForNonexistentLeafDoubleInPath() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                )
+            ).optLeafAsDouble("/nonexistent/path").isPresent()
+        );
+    }
+
+    @Test
+    void throwsForNonexistentLeafDoubleInPath() {
+        assertTrue(
+            assertThrows(
+                IllegalArgumentException.class,
+                () -> new SmartJson(
+                    new Json.Of(
+                        MAPPER.createObjectNode()
+                    )
+                ).leafAsDouble("/nonexistent/path")
+            ).getMessage().contains("No such field")
+        );
+    }
+
+    // Double, path, autoconversions
+
+    @Test
+    void returnsZeroIfOptLeafInPathIsNotDouble() {
+        assertEquals(
+            0.0,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", true)
+                        )
+                )
+            ).optLeafAsDouble("/field2/innerField").get().doubleValue()
+        );
+    }
+
+    @Test
+    void returnsZeroIfLeafInPathIsNotDouble() {
+        assertEquals(
+            0.0,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", true)
+                        )
+                )
+            ).leafAsDouble("/field2/innerField")
+        );
+    }
+
+    @Test
+    void returnsDoubleEvenIfOptLeafInPathIsInt() {
+        assertEquals(
+            5.0,
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", 5)
+                        )
+                )
+            ).optLeafAsDouble("/field2/innerField").get().doubleValue()
+        );
+    }
+
+    // Boolean, immediate, normal
 
     @Test
     void findsOptLeafAsBool() {
@@ -370,6 +715,8 @@ final class SmartJsonLeafTest {
         );
     }
 
+    // Boolean, immediate, autoconversions
+
     @Test
     void returnsFalseIfOptLeafIsNotBool() {
         assertFalse(
@@ -393,6 +740,103 @@ final class SmartJsonLeafTest {
                         .put("boolField", true)
                 )
             ).leafAsBool("stringField")
+        );
+    }
+
+    // Boolean, path, normal
+
+    @Test
+    void findsOptBoolLeafInPath() {
+        assertTrue(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", true)
+                        )
+                )
+            ).optLeafAsBool("/field2/innerField").get()
+        );
+    }
+
+    @Test
+    void findsLeafBoolInPath() {
+        assertTrue(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", true)
+                        )
+                )
+            ).leafAsBool("/field2/innerField")
+        );
+    }
+
+    @Test
+    void returnsEmptyOptionalForNonexistentLeafBoolInPath() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                )
+            ).optLeafAsBool("/nonexistent/path").isPresent()
+        );
+    }
+
+    @Test
+    void throwsForNonexistentLeafBoolInPath() {
+        assertTrue(
+            assertThrows(
+                IllegalArgumentException.class,
+                () -> new SmartJson(
+                    new Json.Of(
+                        MAPPER.createObjectNode()
+                    )
+                ).leafAsBool("/nonexistent/path")
+            ).getMessage().contains("No such field")
+        );
+    }
+
+    // Double, path, autoconversions
+
+    @Test
+    void returnsFalseIfOptLeafInPathIsNotBool() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", "string")
+                        )
+                )
+            ).optLeafAsBool("/field2/innerField").get()
+        );
+    }
+
+    @Test
+    void returnsFalseIfLeafInPathIsNotBool() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .<ObjectNode>set(
+                            "field2",
+                            MAPPER.createObjectNode()
+                                .put("innerField", 17)
+                        )
+                )
+            ).leafAsBool("/field2/innerField")
         );
     }
 }

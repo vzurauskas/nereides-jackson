@@ -3,6 +3,7 @@ package com.vzurauskas.nereides.jackson;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Optional;
@@ -84,12 +85,11 @@ public final class SmartJson implements Json {
 
     /**
      * Method to get a {@code String} type field of this JSON.
-     * @param name Name of the field to return.
+     * @param path Name of the field to return.
      * @return Optional value of the field.
      */
-    public Optional<String> optLeaf(String name) {
-        return Optional.ofNullable(jackson.value().get(name))
-            .map(JsonNode::textValue);
+    public Optional<String> optLeaf(String path) {
+        return nodeAt(path).map(JsonNode::textValue);
     }
 
     /**
@@ -108,12 +108,11 @@ public final class SmartJson implements Json {
 
     /**
      * Method to get an {@code int} type field of this JSON.
-     * @param name Name of the field to return.
+     * @param path Name of the field to return.
      * @return Optional value of the field.
      */
-    public Optional<Integer> optLeafAsInt(String name) {
-        return Optional.ofNullable(jackson.value().get(name))
-            .map(JsonNode::intValue);
+    public Optional<Integer> optLeafAsInt(String path) {
+        return nodeAt(path).map(JsonNode::intValue);
     }
 
     /**
@@ -132,12 +131,11 @@ public final class SmartJson implements Json {
 
     /**
      * Method to get a {@code double} type field of this JSON.
-     * @param name Name of the field to return.
+     * @param path Name of the field to return.
      * @return Optional value of the field.
      */
-    public Optional<Double> optLeafAsDouble(String name) {
-        return Optional.ofNullable(jackson.value().get(name))
-            .map(JsonNode::doubleValue);
+    public Optional<Double> optLeafAsDouble(String path) {
+        return nodeAt(path).map(JsonNode::doubleValue);
     }
 
     /**
@@ -156,12 +154,11 @@ public final class SmartJson implements Json {
 
     /**
      * Method to get a {@code boolean} type field of this JSON.
-     * @param name Name of the field to return.
+     * @param path Name of the field to return.
      * @return Optional value of the field.
      */
-    public Optional<Boolean> optLeafAsBool(String name) {
-        return Optional.ofNullable(jackson.value().get(name))
-            .map(JsonNode::booleanValue);
+    public Optional<Boolean> optLeafAsBool(String path) {
+        return nodeAt(path).map(JsonNode::booleanValue);
     }
 
     /**
@@ -176,6 +173,15 @@ public final class SmartJson implements Json {
                 "No such field of specified type: " + name
             )
         );
+    }
+
+    private Optional<JsonNode> nodeAt(String path) {
+        JsonNode node = !path.isEmpty() && path.charAt(0) == '/'
+            ? jackson.value().at(path)
+            : jackson.value().path(path);
+        return node.isMissingNode()
+            ? Optional.empty()
+            : Optional.of(node);
     }
 
     /**
