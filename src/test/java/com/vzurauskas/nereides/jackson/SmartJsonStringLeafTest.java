@@ -96,6 +96,19 @@ final class SmartJsonStringLeafTest {
         );
     }
 
+    @Test
+    void emptyFieldName() {
+        assertFalse(
+            new SmartJson(
+                new Json.Of(
+                    MAPPER.createObjectNode()
+                        .put("field1", "value1")
+                        .put("intField", 5)
+                )
+            ).optLeaf("").isPresent()
+        );
+    }
+
     // Path
 
     @Test
