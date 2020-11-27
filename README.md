@@ -25,7 +25,7 @@ Available Nereides:
 <dependency>
     <groupId>com.vzurauskas.nereides</groupId>
     <artifactId>nereides-jackson</artifactId>
-    <version>1.1.3</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
@@ -62,6 +62,9 @@ Optional<String> leaf = new SmartJson(json).leaf("nymph");
 
 // Get a deeply nested Json:
 SmartJson nested = new SmartJson(json).at("/path/to/nested/json");
+
+// Get a deeply nested int:
+int nestedInt = new SmartJson(json).at("/path/to/nested/int");
 ```
 
 ### MutableJson

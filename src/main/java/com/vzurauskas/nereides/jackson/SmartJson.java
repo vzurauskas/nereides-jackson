@@ -83,93 +83,103 @@ public final class SmartJson implements Json {
     }
 
     /**
-     * Method to get a {@code String} type field of this JSON.
-     * @param path Name of the field to return.
-     * @return Optional value of the field.
+     * Method to get a {@code String} type  leaf (primitive field) of this JSON.
+     * @param path JSON path to the leaf or the name of the leaf if it is
+     * directly at the root of this JSON.
+     * @return Optional value of the leaf.
      */
     public Optional<String> optLeaf(String path) {
         return nodeAt(path).map(JsonNode::textValue);
     }
 
     /**
-     * Method to get a {@code String} type field of this JSON.
-     * @param name Name of the field to return.
-     * @return String value of the field, if the field exists.
-     * @throws IllegalArgumentException if field does not exist.
+     * Method to get a {@code String} type leaf (primitive field) of this JSON.
+     * @param path JSON path to the leaf or the name of the leaf if it is
+     * directly at the root of this JSON.
+     * @return String value of the field, if the leaf exists.
+     * @throws IllegalArgumentException if leaf does not exist.
      */
-    public String leaf(String name) {
-        return optLeaf(name).orElseThrow(
+    public String leaf(String path) {
+        return optLeaf(path).orElseThrow(
             () -> new IllegalArgumentException(
-                "No such field of specified type: " + name
+                "No such field of specified type: " + path
             )
         );
     }
 
     /**
-     * Method to get an {@code int} type field of this JSON.
-     * @param path Name of the field to return.
-     * @return Optional value of the field.
+     * Method to get an {@code int} type  leaf (primitive field) of this JSON.
+     * @param path JSON path to the leaf or the name of the leaf if it is
+     * directly at the root of this JSON.
+     * @return Optional value of the leaf.
      */
     public Optional<Integer> optLeafAsInt(String path) {
         return nodeAt(path).map(JsonNode::intValue);
     }
 
     /**
-     * Method to get an {@code int} type field of this JSON.
-     * @param name Name of the field to return.
-     * @return Int value of the field.
-     * @throws IllegalArgumentException if field does not exist.
+     * Method to get an {@code int} type  leaf (primitive field) of this JSON.
+     * @param path JSON path to the leaf or the name of the leaf if it is
+     * directly at the root of this JSON.
+     * @return Int value of the leaf.
+     * @throws IllegalArgumentException if leaf does not exist.
      */
-    public int leafAsInt(String name) {
-        return optLeafAsInt(name).orElseThrow(
+    public int leafAsInt(String path) {
+        return optLeafAsInt(path).orElseThrow(
             () -> new IllegalArgumentException(
-                "No such field of specified type: " + name
+                "No such field of specified type: " + path
             )
         );
     }
 
     /**
-     * Method to get a {@code double} type field of this JSON.
-     * @param path Name of the field to return.
-     * @return Optional value of the field.
+     * Method to get a {@code double} type  leaf (primitive field) of this JSON.
+     * @param path JSON path to the leaf or the name of the leaf if it is
+     * directly at the root of this JSON.
+     * @return Optional value of the leaf.
      */
     public Optional<Double> optLeafAsDouble(String path) {
         return nodeAt(path).map(JsonNode::doubleValue);
     }
 
     /**
-     * Method to get an {@code double} type field of this JSON.
-     * @param name Name of the field to return.
-     * @return Double value of the field.
-     * @throws IllegalArgumentException if field does not exist.
+     * Method to get an {@code double} type leaf (primitive field) of this JSON.
+     * @param path JSON path to the leaf or the name of the leaf if it is
+     * directly at the root of this JSON.
+     * @return Double value of the leaf.
+     * @throws IllegalArgumentException if leaf does not exist.
      */
-    public double leafAsDouble(String name) {
-        return optLeafAsDouble(name).orElseThrow(
+    public double leafAsDouble(String path) {
+        return optLeafAsDouble(path).orElseThrow(
             () -> new IllegalArgumentException(
-                "No such field of specified type: " + name
+                "No such field of specified type: " + path
             )
         );
     }
 
     /**
-     * Method to get a {@code boolean} type field of this JSON.
-     * @param path Name of the field to return.
-     * @return Optional value of the field.
+     * Method to get a {@code boolean} type  leaf (primitive field) of this
+     * JSON.
+     * @param path JSON path to the leaf or the name of the leaf if it is
+     * directly at the root of this JSON.
+     * @return Optional value of the leaf.
      */
     public Optional<Boolean> optLeafAsBool(String path) {
         return nodeAt(path).map(JsonNode::booleanValue);
     }
 
     /**
-     * Method to get an {@code int} type field of this JSON.
-     * @param name Name of the field to return.
-     * @return Boolean value of the field.
+     * Method to get an {@code int} type field  leaf (primitive field) of this
+     * JSON.
+     * @param path JSON path to the leaf or the name of the leaf if it is
+     * directly at the root of this JSON.
+     * @return Boolean value of the leaf.
      * @throws IllegalArgumentException if field does not exist.
      */
-    public boolean leafAsBool(String name) {
-        return optLeafAsBool(name).orElseThrow(
+    public boolean leafAsBool(String path) {
+        return optLeafAsBool(path).orElseThrow(
             () -> new IllegalArgumentException(
-                "No such field of specified type: " + name
+                "No such field of specified type: " + path
             )
         );
     }
